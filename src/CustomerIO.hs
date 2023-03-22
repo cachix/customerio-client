@@ -4,17 +4,17 @@
 
 {-# LANGUAGE RecordWildCards #-}
 
-module Customer
-  ( module Customer
-  , module Customer.Track.Events.Types.ReportPushMetrics
-  , module Customer.Track.Events.Types.TrackAnonymousEvent
-  , module Customer.Track.Events.Types.TrackCustomerEvent
+module CustomerIO
+  ( module CustomerIO
+  , module CustomerIO.Track.Events.Types.ReportPushMetrics
+  , module CustomerIO.Track.Events.Types.TrackAnonymousEvent
+  , module CustomerIO.Track.Events.Types.TrackCustomerEvent
   ) where
 
-import Customer.Track.Events.API (api)
-import Customer.Track.Events.Types.ReportPushMetrics
-import Customer.Track.Events.Types.TrackAnonymousEvent
-import Customer.Track.Events.Types.TrackCustomerEvent
+import CustomerIO.Track.Events.API (api)
+import CustomerIO.Track.Events.Types.ReportPushMetrics
+import CustomerIO.Track.Events.Types.TrackAnonymousEvent
+import CustomerIO.Track.Events.Types.TrackCustomerEvent
 import Data.Text (Text)
 import qualified Network.HTTP.Client as HTTP
 import Servant.API

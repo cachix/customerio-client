@@ -4,12 +4,12 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-module Customer.Track.Events.Types.ReportPushMetrics
+module CustomerIO.Track.Events.Types.ReportPushMetrics
   ( ReportPushMetricsBody(..)
   , EventType(..)
   ) where
 
-import Customer.Aeson (defaultAesonOptions)
+import CustomerIO.Aeson (defaultAesonOptions)
 import Data.Aeson (ToJSON(toJSON))
 import Data.Aeson.TH (deriveToJSON)
 import Data.Text (Text)
