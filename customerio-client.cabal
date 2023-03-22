@@ -30,7 +30,7 @@ library
       Customer.Aeson
       Customer.Track.Events.API
       Customer.Track.Events.Types.ReportPushMetrics
-      Customer.Track.Events.Types.TrackAnonymusEvent
+      Customer.Track.Events.Types.TrackAnonymousEvent
       Customer.Track.Events.Types.TrackCustomerEvent
   other-modules:
       Paths_customerio_client

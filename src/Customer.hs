@@ -7,13 +7,13 @@
 module Customer
   ( module Customer
   , module Customer.Track.Events.Types.ReportPushMetrics
-  , module Customer.Track.Events.Types.TrackAnonymusEvent
+  , module Customer.Track.Events.Types.TrackAnonymousEvent
   , module Customer.Track.Events.Types.TrackCustomerEvent
   ) where
 
 import Customer.Track.Events.API (api)
 import Customer.Track.Events.Types.ReportPushMetrics
-import Customer.Track.Events.Types.TrackAnonymusEvent
+import Customer.Track.Events.Types.TrackAnonymousEvent
 import Customer.Track.Events.Types.TrackCustomerEvent
 import Data.Text (Text)
 import qualified Network.HTTP.Client as HTTP
@@ -41,11 +41,11 @@ mkEnvDef :: BasicAuthData -> HTTP.Manager -> Env
 mkEnvDef = mkEnv host
 
 trackCustomerEventC :: BasicAuthData -> Text -> TrackCustomerEventBody -> ClientM ()
-trackAnonymusEventC :: BasicAuthData -> TrackAnonymusEventBody -> ClientM ()
+trackAnonymousEventC :: BasicAuthData -> TrackAnonymousEventBody -> ClientM ()
 reportPushMetricsC  :: ReportPushMetricsBody -> ClientM ()
 
 trackCustomerEventC
-  :<|> trackAnonymusEventC
+  :<|> trackAnonymousEventC
   :<|> reportPushMetricsC
   = client api
 
@@ -53,9 +53,9 @@ trackCustomerEvent :: Env -> Text -> TrackCustomerEventBody -> IO (Either Client
 trackCustomerEvent MkEnv{..} identifier body = do
   runClientM (trackCustomerEventC authtoken identifier body) clientEnv
 
-trackAnonymusEvent :: Env -> TrackAnonymusEventBody -> IO (Either ClientError ())
-trackAnonymusEvent MkEnv{..} body = do
-  runClientM (trackAnonymusEventC authtoken body) clientEnv
+trackAnonymousEvent :: Env -> TrackAnonymousEventBody -> IO (Either ClientError ())
+trackAnonymousEvent MkEnv{..} body = do
+  runClientM (trackAnonymousEventC authtoken body) clientEnv
 
 reportPushMetrics :: Env -> ReportPushMetricsBody -> IO (Either ClientError ())
 reportPushMetrics MkEnv{..} body = do
