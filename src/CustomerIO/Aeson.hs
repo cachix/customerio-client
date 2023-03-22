@@ -2,7 +2,7 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
-module Customer.Aeson (defaultAesonOptions, mkPair, mkObject) where
+module CustomerIO.Aeson (defaultAesonOptions, mkPair, mkObject) where
 
 import Data.Aeson.Casing ( aesonPrefix, snakeCase )
 import Data.Aeson.Types

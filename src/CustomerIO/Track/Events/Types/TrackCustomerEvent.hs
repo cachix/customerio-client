@@ -2,11 +2,11 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
-module Customer.Track.Events.Types.TrackCustomerEvent
-  ( module Customer.Track.Events.Types.TrackCustomerEvent
+module CustomerIO.Track.Events.Types.TrackCustomerEvent
+  ( module CustomerIO.Track.Events.Types.TrackCustomerEvent
   ) where
 
-import Customer.Aeson (defaultAesonOptions, mkObject, mkPair)
+import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
 import Data.Aeson (Object, ToJSON(toJSON), Value(..))
 import Data.Aeson.TH (deriveToJSON)
 import Data.Text (Text)
