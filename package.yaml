@@ -8,7 +8,7 @@ version: 0.1.0
 
 author: Serokell <hi@serokell.io>
 
-github: serokell/customer-client
+github: serokell/customerio-client
 
 synopsis: Client for customer.io
 description:
