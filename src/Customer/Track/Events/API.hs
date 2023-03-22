@@ -5,7 +5,7 @@
 module Customer.Track.Events.API (module Customer.Track.Events.API) where
 
 import Customer.Track.Events.Types.ReportPushMetrics (ReportPushMetricsBody)
-import Customer.Track.Events.Types.TrackAnonymusEvent (TrackAnonymusEventBody)
+import Customer.Track.Events.Types.TrackAnonymousEvent (TrackAnonymousEventBody)
 import Customer.Track.Events.Types.TrackCustomerEvent (TrackCustomerEventBody)
 import Data.Proxy (Proxy(..))
 import Data.Text (Text)
@@ -20,10 +20,10 @@ type TrackCustomerEvent
   :> ReqBody '[JSON] TrackCustomerEventBody
   :> Post '[JSON] ()
 
-type TrackAnonymusEvent
+type TrackAnonymousEvent
   =  BasicAuthToken
   :> "events"
-  :> ReqBody '[JSON] TrackAnonymusEventBody
+  :> ReqBody '[JSON] TrackAnonymousEventBody
   :> Post '[JSON] ()
 
 type ReportPushMetrics
@@ -36,7 +36,7 @@ type API
   = "api"
   :> "v1"
   :> ( TrackCustomerEvent
-  :<|> TrackAnonymusEvent
+  :<|> TrackAnonymousEvent
   :<|> ReportPushMetrics
   )
 
