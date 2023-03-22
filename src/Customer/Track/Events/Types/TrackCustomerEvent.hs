@@ -19,9 +19,9 @@ data TrackCustomerEventBody = MkTrackCustomerEvent
   }
 
 data CustomerEventData = MkCustomerEventData
-  { cedDescription      :: Maybe Value
-  , cedType             :: Maybe Value
-  , cedProperties       :: Maybe Value
+  { cedRecipient        :: Maybe Text
+  , cedFromAddress      :: Maybe Text
+  , cedReplyTo          :: Maybe Text
   , cedAdditionalFields :: Maybe Object
   }
 
@@ -31,9 +31,9 @@ instance ToJSON CustomerEventData where
     Nothing -> Object mainFields
     where
       mainFields = mkObject
-        [ mkPair "description" <$> cedDescription
-        , mkPair "type"        <$> cedType
-        , mkPair "properties"  <$> cedProperties
+        [ mkPair "recipient" <$> cedRecipient
+        , mkPair "from_address" <$> cedFromAddress
+        , mkPair "reply_to" <$> cedReplyTo
         ]
 
 defaultTrackCustomerEvent
