@@ -7,6 +7,7 @@ module CustomerIO.Track.Events.Types.TrackCustomerEvent
   ) where
 
 import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
+import CustomerIO.Track.Events.Types.Core (Timestamp)
 import Data.Aeson (Object, ToJSON(toJSON), Value(..))
 import Data.Aeson.TH (deriveToJSON)
 import Data.Text (Text)
@@ -14,7 +15,7 @@ import Data.Text (Text)
 data TrackCustomerEventBody = MkTrackCustomerEvent
   { tceName      :: Text
   , tceId        :: Maybe Text
-  , tceTimestamp :: Maybe Int
+  , tceTimestamp :: Maybe Timestamp
   , tceData      :: Maybe CustomerEventData
   }
 

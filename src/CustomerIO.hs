@@ -6,12 +6,14 @@
 
 module CustomerIO
   ( module CustomerIO
+  , module CustomerIO.Track.Events.Types.Core
   , module CustomerIO.Track.Events.Types.ReportPushMetrics
   , module CustomerIO.Track.Events.Types.TrackAnonymousEvent
   , module CustomerIO.Track.Events.Types.TrackCustomerEvent
   ) where
 
 import CustomerIO.Track.Events.API (api)
+import CustomerIO.Track.Events.Types.Core
 import CustomerIO.Track.Events.Types.ReportPushMetrics
 import CustomerIO.Track.Events.Types.TrackAnonymousEvent
 import CustomerIO.Track.Events.Types.TrackCustomerEvent

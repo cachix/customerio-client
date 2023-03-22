@@ -7,6 +7,7 @@ module CustomerIO.Track.Events.Types.TrackAnonymousEvent
   ) where
 
 import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
+import CustomerIO.Track.Events.Types.Core (Timestamp)
 import Data.Aeson
 import Data.Aeson.TH (deriveToJSON)
 import Data.Text (Text)
@@ -19,14 +20,14 @@ data StandardAnonymousEvent = MkStandardAnonymousEvent
   { saeName        :: Text
   , saeAnonymousId :: Text
   , saeId          :: Maybe Text
-  , saeTimestamp   :: Maybe Int
+  , saeTimestamp   :: Maybe Timestamp
   , saeData        :: Maybe StandardAnonymousData
   }
 
 data InviteAnonymousEvent = MkInviteAnonymousEvent
   { iaeName      :: Text
   , iaeData      :: InviteAnonymousData
-  , iaeTimestamp :: Maybe Int
+  , iaeTimestamp :: Maybe Timestamp
   }
 
 data StandardAnonymousData = MkStandardAnonymousData
