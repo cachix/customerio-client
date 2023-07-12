@@ -15,6 +15,7 @@ type BasicAuthToken = BasicAuth "API Token" Text
 
 type TrackCustomerEvent
   =  BasicAuthToken
+  :> "customers"
   :> Capture "identifier" Text
   :> "events"
   :> ReqBody '[JSON] TrackCustomerEventBody
