@@ -18,7 +18,7 @@ data TrackAnonymousEventBody
 
 data StandardAnonymousEvent = MkStandardAnonymousEvent
   { saeName        :: Text
-  , saeAnonymousId :: Text
+  , saeAnonymousId :: Maybe Text
   , saeId          :: Maybe Text
   , saeTimestamp   :: Maybe Timestamp
   , saeData        :: Maybe StandardAnonymousData
@@ -66,10 +66,9 @@ instance ToJSON InviteAnonymousData where
 
 defaultStandardAnonymousEvent
   :: Text -- ^ name
-  -> Text -- ^ anonymous_id
   -> StandardAnonymousEvent
-defaultStandardAnonymousEvent name anonymousId =
-  MkStandardAnonymousEvent name anonymousId  Nothing Nothing Nothing
+defaultStandardAnonymousEvent name =
+  MkStandardAnonymousEvent name Nothing  Nothing Nothing Nothing
 
 defaultInviteAnonymousEvent
   :: Text -- ^ name
