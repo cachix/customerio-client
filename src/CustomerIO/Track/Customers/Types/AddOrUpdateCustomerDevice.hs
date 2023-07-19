@@ -1,7 +1,9 @@
 module CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice where
 
-import Data.Aeson
-import CustomerIO.Aeson
+import CustomerIO.Aeson (mkObject, mkPair)
+import CustomerIO.Track.Events.Types.Core (Timestamp)
+import Data.Aeson (Object, ToJSON(toJSON), Value(..), object)
+import Data.Text (Text)
 
 data AddOrUpdateCustomerDeviceBody = MkAddOrUpdateCustomerDeviceBody
   { aucdDeviceId :: Text
