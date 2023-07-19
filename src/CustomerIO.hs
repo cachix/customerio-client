@@ -6,6 +6,8 @@
 
 module CustomerIO
   ( module CustomerIO
+  , module CustomerIO.Track.Customers.Types.AddOrUpdateCustomer
+  , module CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice
   , module CustomerIO.Track.Events.Types.Core
   , module CustomerIO.Track.Events.Types.ReportPushMetrics
   , module CustomerIO.Track.Events.Types.TrackAnonymousEvent
