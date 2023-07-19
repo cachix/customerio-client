@@ -1,11 +1,13 @@
-module CustomerIO.Track.Customers.API where
+module CustomerIO.Track.Customers.API
+  ( module CustomerIO.Track.Customers.API
+  )
+  where
 
 import CustomerIO.Track.Customers.Types.AddOrUpdateCustomer (AddOrUpdateCustomerBody)
 import CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice (AddOrUpdateCustomerDeviceBody)
+import CustomerIO.Track.Events.Types.Core (BasicAuthToken)
 import Data.Text (Text)
-import Servant.API (BasicAuth, Capture, Delete, JSON, Put, ReqBody, type (:<|>), type (:>))
-
-type BasicAuthToken = BasicAuth "API Token" Text
+import Servant.API (Capture, Delete, JSON, Put, ReqBody, type (:>))
 
 type AddOrUpdateCustomer
   =  BasicAuthToken

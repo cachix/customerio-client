@@ -1,6 +1,8 @@
-module CustomerIO.Track.Customers.Types.AddOrUpdateCustomer where
+module CustomerIO.Track.Customers.Types.AddOrUpdateCustomer
+  ( module CustomerIO.Track.Customers.Types.AddOrUpdateCustomer
+  ) where
 
-import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
+import CustomerIO.Aeson (defaultAesonOptions)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
 import Data.Aeson (Object, ToJSON(toJSON), Value(..))
 import Data.Aeson.TH (deriveToJSON)
@@ -18,7 +20,7 @@ data AddOrUpdateCustomerBody = MkAddOrUpdateCustomerBody
   , aucAttributes                 :: Maybe Object
   }
 
-data CioRelationshipAction = addCioRelationships | removeCioRelationships
+data CioRelationshipAction = AddCioRelationships | RemoveCioRelationships
 
 data Identifier = MkIdentifier
     { iObjectTypeId :: Text
@@ -31,11 +33,11 @@ data CioRelationships = MkCioRelationships
   }
 
 instance ToJSON CioRelationshipAction where
-  toJSON addCioRelationships = String "add_relationships"
-  toJSON removeCioRelationships = String "remove_relationships"
+  toJSON AddCioRelationships = String "add_relationships"
+  toJSON RemoveCioRelationships = String "remove_relationships"
 
 defaultAddOrUpdateCustomerBody :: AddOrUpdateCustomerBody
-defaultAddOrUpdateCustomerBody = mkAddOrUpdateCustomerBody Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
+defaultAddOrUpdateCustomerBody = MkAddOrUpdateCustomerBody Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
 
 deriveToJSON defaultAesonOptions ''Identifier
 deriveToJSON defaultAesonOptions ''CioRelationships

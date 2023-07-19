@@ -1,4 +1,7 @@
-module CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice where
+module CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice
+  ( AddOrUpdateCustomerDeviceBody(..)
+  , DeviceAttributes(..)
+  ) where
 
 import CustomerIO.Aeson (mkObject, mkPair)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
@@ -12,7 +15,7 @@ data AddOrUpdateCustomerDeviceBody = MkAddOrUpdateCustomerDeviceBody
   , aucdAttributes :: Maybe DeviceAttributes
   }
 
-instance ToJSON AddOrUpdateCustomerDevice where
+instance ToJSON AddOrUpdateCustomerDeviceBody where
   toJSON MkAddOrUpdateCustomerDeviceBody {..} =
     object [ mkPair "device" device]
     where

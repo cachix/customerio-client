@@ -1,4 +1,4 @@
-module CustomerIO.Track.API where
+module CustomerIO.Track.API ( module CustomerIO.Track.API ) where
 
 import CustomerIO.Track.Events.API
 import CustomerIO.Track.Customers.API
