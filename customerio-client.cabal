@@ -28,6 +28,10 @@ library
   exposed-modules:
       CustomerIO
       CustomerIO.Aeson
+      CustomerIO.Track.API
+      CustomerIO.Track.Customers.API
+      CustomerIO.Track.Customers.Types.AddOrUpdateCustomer
+      CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice
       CustomerIO.Track.Events.API
       CustomerIO.Track.Events.Types.Core
       CustomerIO.Track.Events.Types.ReportPushMetrics

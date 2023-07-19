@@ -12,7 +12,9 @@ module CustomerIO
   , module CustomerIO.Track.Events.Types.TrackCustomerEvent
   ) where
 
-import CustomerIO.Track.Events.API (api)
+import CustomerIO.Track.API (api)
+import CustomerIO.Track.Customers.Types.AddOrUpdateCustomer
+import CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice
 import CustomerIO.Track.Events.Types.Core
 import CustomerIO.Track.Events.Types.ReportPushMetrics
 import CustomerIO.Track.Events.Types.TrackAnonymousEvent
@@ -42,14 +44,41 @@ mkEnv host' authtoken httpManager = MkEnv {..}
 mkEnvDef :: BasicAuthData -> HTTP.Manager -> Env
 mkEnvDef = mkEnv host
 
+-- Customers
+
+addOrUpdateCustomerC :: BasicAuthData -> Text -> AddOrUpdateCustomerBody -> ClientM ()
+deleteCustomerC :: BasicAuthData -> Text -> ClientM ()
+addOrUpdateCustomerDeviceC :: BasicAuthData -> Text -> AddOrUpdateCustomerDeviceBody -> ClientM ()
+deleteCustomerDeviceC :: BasicAuthData -> Text -> Text -> ClientM ()
+
 trackCustomerEventC :: BasicAuthData -> Text -> TrackCustomerEventBody -> ClientM ()
 trackAnonymousEventC :: BasicAuthData -> TrackAnonymousEventBody -> ClientM ()
 reportPushMetricsC  :: ReportPushMetricsBody -> ClientM ()
 
-trackCustomerEventC
+addOrUpdateCustomerC
+  :<|> deleteCustomerC
+  :<|> addOrUpdateCustomerDeviceC
+  :<|> deleteCustomerDeviceC
+  :<|> trackCustomerEventC
   :<|> trackAnonymousEventC
   :<|> reportPushMetricsC
   = client api
+
+addOrUpdateCustomer :: Env -> Text -> AddOrUpdateCustomerBody -> IO (Either ClientError ())
+addOrUpdateCustomer MkEnv{..} identifier body = do
+  runClientM (addOrUpdateCustomerC authtoken identifier body) clientEnv
+
+deleteCustomer :: Env -> Text -> IO (Either ClientError ())
+deleteCustomer MkEnv{..} identifier = do
+  runClientM (deleteCustomerC authtoken identifier) clientEnv
+
+addOrUpdateCustomerDevice :: Env -> Text -> AddOrUpdateCustomerDeviceBody -> IO (Either ClientError ())
+addOrUpdateCustomerDevice MkEnv{..} identifier body = do
+  runClientM (addOrUpdateCustomerDeviceC authtoken identifier body) clientEnv
+
+deleteCustomerDevice :: Env -> Text -> Text -> IO (Either ClientError ())
+deleteCustomerDevice MkEnv{..} identifier deviceId = do
+  runClientM (deleteCustomerDeviceC authtoken identifier deviceId) clientEnv
 
 trackCustomerEvent :: Env -> Text -> TrackCustomerEventBody -> IO (Either ClientError ())
 trackCustomerEvent MkEnv{..} identifier body = do
