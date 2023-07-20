@@ -19,24 +19,24 @@ data AddOrUpdateCustomerBody = MkAddOrUpdateCustomerBody
   , aucCioSubscriptionPreferences :: Maybe Object -- TODO
   , aucExtraAttributes            :: Maybe Object
   }
-  deriving stock (Show)
+  deriving stock (Eq, Show)
 
 data CioRelationshipAction
   = AddCioRelationships
   | RemoveCioRelationships
-  deriving stock (Show)
+  deriving stock (Eq, Show)
 
 data Identifier = MkIdentifier
   { iObjectTypeId :: Text
   , iObjectId :: Text
   }
-  deriving stock (Show)
+  deriving stock (Eq, Show)
 
 data CioRelationships = MkCioRelationships
   { crAction :: CioRelationshipAction
   , crRelationships :: [Identifier]
   }
-  deriving stock (Show)
+  deriving stock (Eq, Show)
 
 deriveFromJSON defaultAesonOptions ''Identifier
 deriveToJSON defaultAesonOptions ''Identifier

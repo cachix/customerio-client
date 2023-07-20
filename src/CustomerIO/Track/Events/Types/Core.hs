@@ -10,7 +10,7 @@ type BasicAuthToken = BasicAuth "CustomerIO" Text
 
 newtype Timestamp
   = Timestamp { unTimestamp :: UTCTime }
-  deriving stock (Show)
+  deriving newtype (Eq, Show)
 
 instance FromJSON Timestamp where
   parseJSON = fmap (Timestamp . posixSecondsToUTCTime) . parseJSON

@@ -18,7 +18,7 @@ data TrackCustomerEventBody = MkTrackCustomerEvent
   , tceTimestamp :: Maybe Timestamp
   , tceData      :: Maybe CustomerEventData
   }
-  deriving stock (Show)
+  deriving stock (Eq, Show)
 
 data CustomerEventData = MkCustomerEventData
   { cedRecipient        :: Maybe Text
@@ -26,7 +26,7 @@ data CustomerEventData = MkCustomerEventData
   , cedReplyTo          :: Maybe Text
   , cedAdditionalFields :: Maybe Object
   }
-  deriving stock (Show)
+  deriving stock (Eq, Show)
 
 instance FromJSON CustomerEventData where
   parseJSON = withObject "CustomerEventData" $ \o -> do
