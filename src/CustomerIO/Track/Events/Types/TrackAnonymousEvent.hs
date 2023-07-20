@@ -16,6 +16,7 @@ import Data.Text (Text)
 data TrackAnonymousEventBody
   = StandardAnonymousEventBody StandardAnonymousEvent
   | InviteAnonymousEventBody InviteAnonymousEvent
+  deriving stock (Show)
 
 data StandardAnonymousEvent = MkStandardAnonymousEvent
   { saeName        :: Text
@@ -24,18 +25,21 @@ data StandardAnonymousEvent = MkStandardAnonymousEvent
   , saeTimestamp   :: Maybe Timestamp
   , saeData        :: Maybe StandardAnonymousData
   }
+  deriving stock (Show)
 
 data InviteAnonymousEvent = MkInviteAnonymousEvent
   { iaeName      :: Text
   , iaeData      :: InviteAnonymousData
   , iaeTimestamp :: Maybe Timestamp
   }
+  deriving stock (Show)
 
 data StandardAnonymousData = MkStandardAnonymousData
   { sadFromAddress      :: Maybe Text
   , sadReplyTo          :: Maybe Text
   , sadAdditionalFields :: Maybe Object
   }
+  deriving stock (Show)
 
 instance FromJSON StandardAnonymousData where
   parseJSON = withObject "StandardAnonymousData" $ \o -> do
@@ -67,6 +71,7 @@ data InviteAnonymousData = MkInviteAnonymousData
   , iadReplyTo          :: Maybe Text
   , iadAdditionalFields :: Maybe Object
   }
+  deriving stock (Show)
 
 instance FromJSON InviteAnonymousData where
   parseJSON = withObject "InviteAnonymousData" $ \o -> do

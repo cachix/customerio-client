@@ -16,6 +16,7 @@ data AddOrUpdateCustomerDeviceBody = MkAddOrUpdateCustomerDeviceBody
   , aucdLastUsed :: Maybe Timestamp
   , aucdAttributes :: Maybe DeviceAttributes
   }
+  deriving stock (Show)
 
 instance ToJSON AddOrUpdateCustomerDeviceBody where
   toJSON MkAddOrUpdateCustomerDeviceBody {..} =
@@ -46,6 +47,7 @@ data DeviceAttributes = MkDeviceAttributes
   , daPushEnabled :: Maybe Bool
   , daExtraDeviceAttributes :: Maybe Object
   }
+  deriving stock (Show)
 
 instance FromJSON DeviceAttributes where
     parseJSON = withObject "DeviceAttributes" $ \o -> do

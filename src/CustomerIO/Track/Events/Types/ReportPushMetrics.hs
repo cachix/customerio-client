@@ -14,7 +14,7 @@ import Data.Aeson (FromJSON(..), ToJSON(..), withText)
 import Data.Aeson.TH (deriveFromJSON, deriveToJSON)
 import Data.Text (Text)
 
-data EventType = Opened | Converted | Delivered
+data EventType = Opened | Converted | Delivered deriving stock (Show)
 
 instance FromJSON EventType where
   parseJSON = withText "EventType" $ \case
@@ -35,6 +35,7 @@ data ReportPushMetricsBody = MkReportPushMetrics
   , rpmDeviceId   :: Text
   , rpmTimestamp  :: Int
   }
+  deriving stock (Show)
 
 deriveFromJSON defaultAesonOptions ''ReportPushMetricsBody
 deriveToJSON defaultAesonOptions ''ReportPushMetricsBody

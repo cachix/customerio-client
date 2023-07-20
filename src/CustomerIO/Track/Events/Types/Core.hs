@@ -8,7 +8,9 @@ import Servant.API (BasicAuth)
 
 type BasicAuthToken = BasicAuth "API Token" Text
 
-newtype Timestamp = Timestamp { unTimestamp :: UTCTime }
+newtype Timestamp
+  = Timestamp { unTimestamp :: UTCTime }
+  deriving stock (Show)
 
 instance FromJSON Timestamp where
   parseJSON = fmap (Timestamp . posixSecondsToUTCTime) . parseJSON
