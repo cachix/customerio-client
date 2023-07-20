@@ -46,6 +46,9 @@ mkEnv host' authtoken httpManager = MkEnv {..}
 mkEnvDef :: BasicAuthData -> HTTP.Manager -> Env
 mkEnvDef = mkEnv host
 
+mkEnvWithClientEnv :: ClientEnv -> BasicAuthData -> Env
+mkEnvWithClientEnv clientEnv authtoken = MkEnv {..}
+
 -- Customers
 
 addOrUpdateCustomerC :: BasicAuthData -> Text -> AddOrUpdateCustomerBody -> ClientM ()
