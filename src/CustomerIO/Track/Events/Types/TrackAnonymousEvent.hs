@@ -9,7 +9,8 @@ module CustomerIO.Track.Events.Types.TrackAnonymousEvent
 import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
 import Data.Aeson
-import Data.Aeson.TH (deriveToJSON)
+import qualified Data.Aeson.KeyMap as KM
+import Data.Aeson.TH (deriveFromJSON, deriveToJSON)
 import Data.Text (Text)
 
 data TrackAnonymousEventBody
@@ -36,6 +37,20 @@ data StandardAnonymousData = MkStandardAnonymousData
   , sadAdditionalFields :: Maybe Object
   }
 
+instance FromJSON StandardAnonymousData where
+  parseJSON = withObject "StandardAnonymousData" $ \o -> do
+    sadFromAddress <- o .:? "from_address"
+    sadReplyTo <- o .:? "reply_to"
+    let sadAdditionalFields = collectRest o
+    pure MkStandardAnonymousData{..}
+    where
+      knownFields = ["from_address", "reply_to"]
+      collectRest obj =
+        let remaining = KM.filterWithKey (\k _ -> k `notElem` knownFields) obj
+        in if KM.null remaining
+          then Nothing
+          else Just remaining
+
 instance ToJSON StandardAnonymousData where
   toJSON MkStandardAnonymousData{..} = case sadAdditionalFields of
     Just km -> Object (mainFields <> km)
@@ -52,6 +67,21 @@ data InviteAnonymousData = MkInviteAnonymousData
   , iadReplyTo          :: Maybe Text
   , iadAdditionalFields :: Maybe Object
   }
+
+instance FromJSON InviteAnonymousData where
+  parseJSON = withObject "InviteAnonymousData" $ \o -> do
+    iadRecipient <- o .: "recipient"
+    iadFromAddress <- o .:? "from_address"
+    iadReplyTo <- o .:? "reply_to"
+    let iadAdditionalFields = collectRest o
+    pure MkInviteAnonymousData{..}
+    where
+      knownFields = ["recipient", "from_address", "reply_to"]
+      collectRest obj =
+        let remaining = KM.filterWithKey (\k _ -> k `notElem` knownFields) obj
+        in if KM.null remaining
+          then Nothing
+          else Just remaining
 
 instance ToJSON InviteAnonymousData where
   toJSON MkInviteAnonymousData{..} = case iadAdditionalFields of
@@ -77,6 +107,9 @@ defaultInviteAnonymousEvent
 defaultInviteAnonymousEvent name recipient =
   MkInviteAnonymousEvent name (MkInviteAnonymousData recipient Nothing Nothing Nothing) Nothing
 
+deriveFromJSON defaultAesonOptions ''StandardAnonymousEvent
 deriveToJSON defaultAesonOptions ''StandardAnonymousEvent
+deriveFromJSON defaultAesonOptions ''InviteAnonymousEvent
 deriveToJSON defaultAesonOptions ''InviteAnonymousEvent
+deriveFromJSON (defaultAesonOptions {sumEncoding = UntaggedValue}) ''TrackAnonymousEventBody
 deriveToJSON (defaultAesonOptions {sumEncoding = UntaggedValue}) ''TrackAnonymousEventBody

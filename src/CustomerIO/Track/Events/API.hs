@@ -27,7 +27,7 @@ type TrackAnonymousEvent
   :> Post '[JSON] ()
 
 type ReportPushMetrics
-  = "push"
+  =  "push"
   :> "events"
   :> ReqBody '[JSON] ReportPushMetricsBody
   :> Post '[JSON] ()

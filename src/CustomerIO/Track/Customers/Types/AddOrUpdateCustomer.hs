@@ -4,8 +4,8 @@ module CustomerIO.Track.Customers.Types.AddOrUpdateCustomer
 
 import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
-import Data.Aeson (Object, ToJSON(toJSON), Value(..))
-import Data.Aeson.TH (deriveToJSON)
+import Data.Aeson (FromJSON(..), Object, ToJSON(toJSON), Value(..), withObject, withText, (.:?))
+import Data.Aeson.TH (deriveFromJSON, deriveToJSON)
 import Data.Text (Text)
 
 data AddOrUpdateCustomerBody = MkAddOrUpdateCustomerBody
@@ -32,12 +32,34 @@ data CioRelationships = MkCioRelationships
   , crRelationships :: [Identifier]
   }
 
+deriveFromJSON defaultAesonOptions ''Identifier
 deriveToJSON defaultAesonOptions ''Identifier
-deriveToJSON defaultAesonOptions ''CioRelationships
+
+instance FromJSON CioRelationshipAction where
+  parseJSON = withText "CioRelationshipAction" $ \case
+    "add_relationships" -> pure AddCioRelationships
+    "remove_relationships" -> pure RemoveCioRelationships
+    _ -> fail "Unknown CioRelationshipAction"
 
 instance ToJSON CioRelationshipAction where
   toJSON AddCioRelationships = String "add_relationships"
   toJSON RemoveCioRelationships = String "remove_relationships"
+
+deriveFromJSON defaultAesonOptions ''CioRelationships
+deriveToJSON defaultAesonOptions ''CioRelationships
+
+instance FromJSON AddOrUpdateCustomerBody where
+  parseJSON = withObject "AddOrUpdateCustomerBody" $ \o -> do
+    aucId <- o .:? "id"
+    aucEmail <- o .:? "email"
+    aucAnonymousId <- o .:? "anonymous_id"
+    aucCreatedAt <- o .:? "created_at"
+    auc_Update <- o .:? "_update"
+    aucCioRelationships <- o .:? "cio_relationships"
+    aucUnsubscribed <- o .:? "unsubscribed"
+    aucCioSubscriptionPreferences <- o .:? "cio_subscription_preferences"
+    aucAttributes <- o .:? "attributes"
+    pure MkAddOrUpdateCustomerBody {..}
 
 instance ToJSON AddOrUpdateCustomerBody where
   toJSON MkAddOrUpdateCustomerBody {..} = case aucAttributes of

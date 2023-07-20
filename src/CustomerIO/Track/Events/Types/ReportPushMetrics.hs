@@ -10,12 +10,18 @@ module CustomerIO.Track.Events.Types.ReportPushMetrics
   ) where
 
 import CustomerIO.Aeson (defaultAesonOptions)
-import Data.Aeson (ToJSON(toJSON))
-import Data.Aeson.TH (deriveToJSON)
+import Data.Aeson (FromJSON(..), ToJSON(..), withText)
+import Data.Aeson.TH (deriveFromJSON, deriveToJSON)
 import Data.Text (Text)
 
-
 data EventType = Opened | Converted | Delivered
+
+instance FromJSON EventType where
+  parseJSON = withText "EventType" $ \case
+    "opened" -> pure Opened
+    "converted" -> pure Converted
+    "delivered" -> pure Delivered
+    x -> fail $ "Unknown event type: " <> show x
 
 instance ToJSON EventType where
   toJSON = \case
@@ -30,4 +36,5 @@ data ReportPushMetricsBody = MkReportPushMetrics
   , rpmTimestamp  :: Int
   }
 
+deriveFromJSON defaultAesonOptions ''ReportPushMetricsBody
 deriveToJSON defaultAesonOptions ''ReportPushMetricsBody

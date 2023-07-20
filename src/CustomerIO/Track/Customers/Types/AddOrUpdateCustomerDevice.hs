@@ -5,8 +5,10 @@ module CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice
 
 import CustomerIO.Aeson (mkObject, mkPair)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
-import Data.Aeson (Object, ToJSON(toJSON), Value(..), object)
-import Data.Text (Text)
+import Data.Aeson (FromJSON(..), Object, ToJSON(toJSON), Value(..), object, withObject, (.:), (.:?))
+import qualified Data.Aeson.KeyMap as KM
+import Data.Aeson.Types (Parser)
+import Data.Text (Text, unpack)
 
 data AddOrUpdateCustomerDeviceBody = MkAddOrUpdateCustomerDeviceBody
   { aucdDeviceId :: Text
@@ -26,6 +28,15 @@ instance ToJSON AddOrUpdateCustomerDeviceBody where
         , mkPair "attributes" <$> aucdAttributes
         ]
 
+instance FromJSON AddOrUpdateCustomerDeviceBody where
+  parseJSON = withObject "AddOrUpdateCustomerDeviceBody" $ \o -> do
+    device <- o .: "device"
+    aucdDeviceId <- device .: "id"
+    aucdPlatform <- device .: "platform"
+    aucdLastUsed <- device .:? "last_used"
+    aucdAttributes <- device .:? "attributes"
+    pure MkAddOrUpdateCustomerDeviceBody {..}
+
 data DeviceAttributes = MkDeviceAttributes
   { daDeviceOs :: Maybe Text
   , daDeviceModel :: Maybe Text
@@ -35,6 +46,27 @@ data DeviceAttributes = MkDeviceAttributes
   , daPushEnabled :: Maybe Bool
   , daExtraDeviceAttributes :: Maybe Object
   }
+
+instance FromJSON DeviceAttributes where
+    parseJSON = withObject "DeviceAttributes" $ \o -> do
+      daDeviceOs <- o .:? "device_os"
+      daDeviceModel <- o .:? "device_model"
+      daAppVersion <- o .:? "app_version"
+      daCioSdkVersion <- o .:? "cio_sdk_version"
+      daDeviceLocale <- o .:? "device_locale"
+      daPushEnabled <- do
+        pushEnabledText <- o .:? "push_enabled"
+        traverse textToBool pushEnabledText
+      let daExtraDeviceAttributes = collectRest o
+      pure MkDeviceAttributes {..}
+      where
+        knownKeys = ["device_os", "device_model", "app_version", "cio_sdk_version", "device_locale", "push_enabled"]
+        collectRest obj =
+          let remaining = KM.filterWithKey (\k _ -> k `notElem` knownKeys) obj
+          in
+          if KM.null remaining then
+            Nothing else
+            Just remaining
 
 instance ToJSON DeviceAttributes where
   toJSON MkDeviceAttributes {..} = case daExtraDeviceAttributes of
@@ -51,5 +83,10 @@ instance ToJSON DeviceAttributes where
         ]
 
 boolToText :: Bool -> Text
-boolToText True = "true"
 boolToText False = "false"
+boolToText True = "true"
+
+textToBool :: Text -> Parser Bool
+textToBool "false" = pure False
+textToBool "true" = pure True
+textToBool v = fail ("Unexpected value for push_enabled: " <> unpack v)
