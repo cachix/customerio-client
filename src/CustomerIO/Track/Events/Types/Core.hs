@@ -6,7 +6,7 @@ import Data.Time.Clock (UTCTime)
 import Data.Time.Clock.POSIX (posixSecondsToUTCTime, utcTimeToPOSIXSeconds)
 import Servant.API (BasicAuth)
 
-type BasicAuthToken = BasicAuth "API Token" Text
+type BasicAuthToken = BasicAuth "CustomerIO" Text
 
 newtype Timestamp
   = Timestamp { unTimestamp :: UTCTime }
