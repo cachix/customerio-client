@@ -6,10 +6,9 @@ module CustomerIO.Track.Events.Types.TrackCustomerEvent
   ( module CustomerIO.Track.Events.Types.TrackCustomerEvent
   ) where
 
-import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
+import CustomerIO.Aeson (defaultAesonOptions, leftoverObject, mkObject, mkPair)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
 import Data.Aeson (FromJSON(..), Object, ToJSON(toJSON), Value(..), withObject, (.:?))
-import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.TH (deriveFromJSON, deriveToJSON)
 import Data.Text (Text)
 
@@ -34,15 +33,10 @@ instance FromJSON CustomerEventData where
     cedRecipient <- o .:? "recipient"
     cedFromAddress <- o .:? "from_address"
     cedReplyTo <- o .:? "reply_to"
-    let cedAdditionalFields = collectRest o
+    cedAdditionalFields <- o `leftoverObject` knownFields
     pure MkCustomerEventData{..}
     where
       knownFields = ["recipient", "from_address", "reply_to"]
-      collectRest obj =
-        let remaining = KM.filterWithKey (\k _ -> k `notElem` knownFields) obj
-        in if KM.null remaining
-          then Nothing
-          else Just remaining
 
 instance ToJSON CustomerEventData where
   toJSON MkCustomerEventData{..} = case cedAdditionalFields of

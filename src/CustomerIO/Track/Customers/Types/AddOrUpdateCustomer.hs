@@ -2,7 +2,7 @@ module CustomerIO.Track.Customers.Types.AddOrUpdateCustomer
   ( module CustomerIO.Track.Customers.Types.AddOrUpdateCustomer
   ) where
 
-import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
+import CustomerIO.Aeson (defaultAesonOptions, leftoverObject, mkObject, mkPair)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
 import Data.Aeson (FromJSON(..), Object, ToJSON(toJSON), Value(..), withObject, withText, (.:?))
 import Data.Aeson.TH (deriveFromJSON, deriveToJSON)
@@ -17,7 +17,7 @@ data AddOrUpdateCustomerBody = MkAddOrUpdateCustomerBody
   , aucCioRelationships           :: Maybe CioRelationships
   , aucUnsubscribed               :: Maybe Bool
   , aucCioSubscriptionPreferences :: Maybe Object -- TODO
-  , aucAttributes                 :: Maybe Object
+  , aucExtraAttributes            :: Maybe Object
   }
   deriving stock (Show)
 
@@ -64,11 +64,23 @@ instance FromJSON AddOrUpdateCustomerBody where
     aucCioRelationships <- o .:? "cio_relationships"
     aucUnsubscribed <- o .:? "unsubscribed"
     aucCioSubscriptionPreferences <- o .:? "cio_subscription_preferences"
-    aucAttributes <- o .:? "attributes"
+    aucExtraAttributes <- o `leftoverObject` knownKeys
     pure MkAddOrUpdateCustomerBody {..}
+    where
+      knownKeys =
+        [ "id"
+        , "email"
+        , "anonymous_id"
+        , "created_at"
+        , "_update"
+        , "cio_relationships"
+        , "unsubscribed"
+        , "cio_subscription_preferences"
+        ]
+
 
 instance ToJSON AddOrUpdateCustomerBody where
-  toJSON MkAddOrUpdateCustomerBody {..} = case aucAttributes of
+  toJSON MkAddOrUpdateCustomerBody {..} = case aucExtraAttributes of
     Just km -> Object (mainFields <> km)
     Nothing -> Object mainFields
     where

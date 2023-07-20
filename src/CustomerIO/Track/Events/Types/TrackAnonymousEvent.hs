@@ -6,10 +6,9 @@ module CustomerIO.Track.Events.Types.TrackAnonymousEvent
   ( module CustomerIO.Track.Events.Types.TrackAnonymousEvent
   ) where
 
-import CustomerIO.Aeson (defaultAesonOptions, mkObject, mkPair)
+import CustomerIO.Aeson (defaultAesonOptions, leftoverObject, mkObject, mkPair)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
 import Data.Aeson
-import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.TH (deriveFromJSON, deriveToJSON)
 import Data.Text (Text)
 
@@ -45,15 +44,10 @@ instance FromJSON StandardAnonymousData where
   parseJSON = withObject "StandardAnonymousData" $ \o -> do
     sadFromAddress <- o .:? "from_address"
     sadReplyTo <- o .:? "reply_to"
-    let sadAdditionalFields = collectRest o
+    sadAdditionalFields <- o `leftoverObject` knownFields
     pure MkStandardAnonymousData{..}
     where
       knownFields = ["from_address", "reply_to"]
-      collectRest obj =
-        let remaining = KM.filterWithKey (\k _ -> k `notElem` knownFields) obj
-        in if KM.null remaining
-          then Nothing
-          else Just remaining
 
 instance ToJSON StandardAnonymousData where
   toJSON MkStandardAnonymousData{..} = case sadAdditionalFields of
@@ -78,15 +72,10 @@ instance FromJSON InviteAnonymousData where
     iadRecipient <- o .: "recipient"
     iadFromAddress <- o .:? "from_address"
     iadReplyTo <- o .:? "reply_to"
-    let iadAdditionalFields = collectRest o
+    iadAdditionalFields <- o `leftoverObject` knownFields
     pure MkInviteAnonymousData{..}
     where
       knownFields = ["recipient", "from_address", "reply_to"]
-      collectRest obj =
-        let remaining = KM.filterWithKey (\k _ -> k `notElem` knownFields) obj
-        in if KM.null remaining
-          then Nothing
-          else Just remaining
 
 instance ToJSON InviteAnonymousData where
   toJSON MkInviteAnonymousData{..} = case iadAdditionalFields of

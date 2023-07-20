@@ -3,10 +3,9 @@ module CustomerIO.Track.Customers.Types.AddOrUpdateCustomerDevice
   , DeviceAttributes(..)
   ) where
 
-import CustomerIO.Aeson (mkObject, mkPair)
+import CustomerIO.Aeson (leftoverObject, mkObject, mkPair)
 import CustomerIO.Track.Events.Types.Core (Timestamp)
 import Data.Aeson (FromJSON(..), Object, ToJSON(toJSON), Value(..), object, withObject, (.:), (.:?))
-import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (Parser)
 import Data.Text (Text, unpack)
 
@@ -59,16 +58,10 @@ instance FromJSON DeviceAttributes where
       daPushEnabled <- do
         pushEnabledText <- o .:? "push_enabled"
         traverse textToBool pushEnabledText
-      let daExtraDeviceAttributes = collectRest o
+      daExtraDeviceAttributes <- o `leftoverObject` knownKeys
       pure MkDeviceAttributes {..}
       where
         knownKeys = ["device_os", "device_model", "app_version", "cio_sdk_version", "device_locale", "push_enabled"]
-        collectRest obj =
-          let remaining = KM.filterWithKey (\k _ -> k `notElem` knownKeys) obj
-          in
-          if KM.null remaining then
-            Nothing else
-            Just remaining
 
 instance ToJSON DeviceAttributes where
   toJSON MkDeviceAttributes {..} = case daExtraDeviceAttributes of
