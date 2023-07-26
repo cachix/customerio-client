@@ -54,5 +54,8 @@ defaultTrackCustomerEvent
   -> TrackCustomerEventBody
 defaultTrackCustomerEvent name = MkTrackCustomerEvent name Nothing Nothing Nothing
 
+defaultCustomerEventData :: Maybe Object -> CustomerEventData
+defaultCustomerEventData = MkCustomerEventData Nothing Nothing Nothing
+
 deriveFromJSON defaultAesonOptions ''TrackCustomerEventBody
 deriveToJSON defaultAesonOptions ''TrackCustomerEventBody
