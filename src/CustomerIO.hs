@@ -12,6 +12,7 @@ module CustomerIO
   , module CustomerIO.Track.Events.Types.ReportPushMetrics
   , module CustomerIO.Track.Events.Types.TrackAnonymousEvent
   , module CustomerIO.Track.Events.Types.TrackCustomerEvent
+  , ClientError(..)
   ) where
 
 import CustomerIO.Track.API (api)
