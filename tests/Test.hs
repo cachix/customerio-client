@@ -5,8 +5,10 @@ import CustomerIO
 import Data.Aeson
 import Data.Aeson.QQ
 import Data.Text
-import Data.Time.Clock.POSIX (posixSecondsToUTCTime)
+import Data.Time.Clock.POSIX (POSIXTime)
+import Data.Time.Format.ISO8601 (iso8601ParseM)
 import GHC.Exts (fromList)
+import System.IO.Unsafe (unsafePerformIO)
 import Test.Tasty
 import Test.Tasty.HUnit
 
@@ -22,7 +24,10 @@ unitTests = testGroup "Unit tests"
 
 toJsonTests :: [TestTree]
 toJsonTests =
-  [ testCase "AddOrUpdateCustomerBody" $
+  [ testCase "Timestamp" $
+      testToJSON (timestamp, [aesonQQ|#{timestampPosix}|])
+
+  , testCase "AddOrUpdateCustomerBody" $
       testToJSON addOrUpdateCustomerBodyExample
 
   , testCase "TrackCustomerEvent" $
@@ -33,8 +38,13 @@ toJsonTests =
 testToJSON :: (ToJSON a) => (a, Value) -> Assertion
 testToJSON (example, serializedExample) = encode (toJSON example) @?= encode serializedExample
 
+-- NOTE: the timestamp is converted to POSIX seconds.
+-- When serialized to JSON, any precision beyond seconds is lost.
 timestamp :: Timestamp
-timestamp = Timestamp (posixSecondsToUTCTime 0)
+timestamp = Timestamp $ unsafePerformIO (iso8601ParseM "2023-07-29T02:01:32.123Z")
+
+timestampPosix :: POSIXTime
+timestampPosix = 1690596092
 
 addOrUpdateCustomerBodyExample :: (AddOrUpdateCustomerBody, Value)
 addOrUpdateCustomerBodyExample =
@@ -64,7 +74,7 @@ trackCustomerEventExample =
       {
         name: "purchased",
         id: "123",
-        timestamp: 0,
+        timestamp: #{timestampPosix},
         data: { foo: "bar" }
       }
     |]
