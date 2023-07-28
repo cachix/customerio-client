@@ -103,18 +103,24 @@ library:
     - time
     - http-client
 
-# tests:
-#   customer-test:
-#     main:        Main.hs
-#     source-dirs: test
-#     # We often use tasty-discover.
-#     build-tools: tasty-discover:tasty-discover
+tests:
+  customer-test:
+    main:        Test.hs
+    source-dirs: tests
+    # We often use tasty-discover.
+    build-tools: tasty-discover:tasty-discover
 
-#     ghc-options:
-#     - -Wno-incomplete-patterns
-#     - -threaded
-#     - -eventlog
-#     - '"-with-rtsopts=-N -A64m -AL256m"'
+    ghc-options:
+      - -Wno-incomplete-patterns
+      - -threaded
+      - -eventlog
+      - '"-with-rtsopts=-N -A64m -AL256m"'
 
-#     dependencies:
-#     - tasty
+    dependencies:
+      - aeson
+      - aeson-qq
+      - customerio-client
+      - tasty
+      - tasty-hunit-compat
+      - text
+      - time
